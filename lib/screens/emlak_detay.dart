@@ -42,7 +42,7 @@ class _EmlakDetayState extends State<EmlakDetay> {
     _baslikController = TextEditingController(text: widget.emlak.baslik);
     _aciklamaController = TextEditingController(text: widget.emlak.aciklama);
     _fiyatController =
-        TextEditingController(text: widget.emlak.fiyat.toString());
+        TextEditingController(text: formatPrice(widget.emlak.fiyat));
     _resimUrlController = TextEditingController(text: widget.emlak.resimUrl);
     _konumController = TextEditingController(text: widget.emlak.konum);
     _odaSayisiController =
@@ -107,21 +107,37 @@ class _EmlakDetayState extends State<EmlakDetay> {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: () {
-              final guncelEmlak = Emlak(
-                id: widget.emlak.id,
-                baslik: _baslikController.text,
-                aciklama: _aciklamaController.text,
-                fiyat: double.parse(_fiyatController.text.replaceAll('.', '')),
-                resimUrl: _resimUrlController.text,
-                konum: _konumController.text,
-                odaSayisi: int.parse(_odaSayisiController.text),
-                banyoSayisi: int.parse(_banyoSayisiController.text),
-                metreKare: double.parse(_metreKareController.text),
-                binaYasi: int.parse(_binaYasiController.text),
-                tip: _secilenTip,
-                satilikMi: _satilikMi,
-              );
-              Navigator.pop(context, guncelEmlak);
+              try {
+                final fiyatStr = _fiyatController.text.replaceAll('.', '');
+                final guncelEmlak = Emlak(
+                  id: widget.emlak.id,
+                  baslik: _baslikController.text.trim(),
+                  aciklama: _aciklamaController.text.trim(),
+                  fiyat: double.parse(fiyatStr),
+                  resimUrl: _resimUrlController.text.trim(),
+                  konum: _konumController.text.trim(),
+                  odaSayisi: int.parse(_odaSayisiController.text),
+                  banyoSayisi: int.parse(_banyoSayisiController.text),
+                  metreKare: double.parse(_metreKareController.text),
+                  binaYasi: int.parse(_binaYasiController.text),
+                  tip: _secilenTip,
+                  satilikMi: _satilikMi,
+                );
+                Navigator.pop(context, guncelEmlak);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Değişiklikler kaydedildi'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Hata: ${e.toString()}'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
             },
           ),
         ],

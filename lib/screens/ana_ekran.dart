@@ -21,7 +21,7 @@ class _AnaEkranState extends State<AnaEkran> {
   List<Emlak> emlaklar = [];
   String secilenTip = 'Hepsi';
   String secilenDurum = 'Hepsi';
-  RangeValues fiyatAraligi = const RangeValues(0, 10000000);
+  RangeValues fiyatAraligi = const RangeValues(0, 100000000);
   RangeValues binaYasiAraligi = const RangeValues(0, 50);
 
   @override
@@ -33,7 +33,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '1',
         baslik: 'Lüks Villa',
         aciklama: 'Beşiktaşta deniz manzaralı lüks villa',
-        fiyat: 5000000,
+        fiyat: 45000000, // 45 milyon
         resimUrl:
             'https://images.unsplash.com/photo-1613977257363-707ba9348227',
         konum: 'Beşiktaş, İstanbul',
@@ -48,7 +48,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '2',
         baslik: 'Modern Daire',
         aciklama: 'Kadıköyde merkezi konumda modern daire',
-        fiyat: 2500000,
+        fiyat: 12500000, // 12.5 milyon
         resimUrl:
             'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267',
         konum: 'Kadıköy, İstanbul',
@@ -63,7 +63,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '3',
         baslik: 'Bahçeli Müstakil',
         aciklama: 'Üsküdarda geniş bahçeli müstakil ev',
-        fiyat: 3500000,
+        fiyat: 18500000, // 18.5 milyon
         resimUrl:
             'https://images.unsplash.com/photo-1568605114967-8130f3a36994',
         konum: 'Üsküdar, İstanbul',
@@ -78,7 +78,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '4',
         baslik: 'Boğaz Manzaralı Daire',
         aciklama: 'Sarıyerde boğaz manzaralı lüks daire',
-        fiyat: 4500000,
+        fiyat: 28500000, // 28.5 milyon
         resimUrl:
             'https://images.unsplash.com/photo-1574362848149-11496d93a7c7',
         konum: 'Sarıyer, İstanbul',
@@ -93,7 +93,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '5',
         baslik: 'Kiralık Stüdyo',
         aciklama: 'Şişlide merkezi konumda kiralık stüdyo daire',
-        fiyat: 8000,
+        fiyat: 25000, // 25 bin kira
         resimUrl:
             'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688',
         konum: 'Şişli, İstanbul',
@@ -108,7 +108,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '6',
         baslik: 'Havuzlu Villa',
         aciklama: 'Beylikdüzünde özel havuzlu lüks villa',
-        fiyat: 7500000,
+        fiyat: 35000000, // 35 milyon
         resimUrl:
             'https://images.unsplash.com/photo-1580587771525-78b9dba3b914',
         konum: 'Beylikdüzü, İstanbul',
@@ -123,7 +123,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '7',
         baslik: 'Kiralık Villa',
         aciklama: 'Ataşehirde bahçeli kiralık villa',
-        fiyat: 25000,
+        fiyat: 85000, // 85 bin kira
         resimUrl:
             'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9',
         konum: 'Ataşehir, İstanbul',
@@ -138,7 +138,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '8',
         baslik: 'Deniz Manzaralı',
         aciklama: 'Maltepe sahilde deniz manzaralı daire',
-        fiyat: 3200000,
+        fiyat: 15800000, // 15.8 milyon
         resimUrl:
             'https://images.unsplash.com/photo-1512917774080-9991f1c4c750',
         konum: 'Maltepe, İstanbul',
@@ -153,7 +153,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '9',
         baslik: 'Bahçeli Müstakil',
         aciklama: 'Çekmeköyde doğayla iç içe müstakil ev',
-        fiyat: 2800000,
+        fiyat: 22500000, // 22.5 milyon
         resimUrl:
             'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83',
         konum: 'Çekmeköy, İstanbul',
@@ -168,7 +168,7 @@ class _AnaEkranState extends State<AnaEkran> {
         id: '10',
         baslik: 'Kiralık Daire',
         aciklama: 'Bakırköy merkeze yakın kiralık daire',
-        fiyat: 12000,
+        fiyat: 35000, // 35 bin kira
         resimUrl:
             'https://images.unsplash.com/photo-1493809842364-78817add7ffb',
         konum: 'Bakırköy, İstanbul',
@@ -206,7 +206,7 @@ class _AnaEkranState extends State<AnaEkran> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Emlak Uygulaması'),
+        title: const Text('Modern Emlak Uygulaması'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -251,7 +251,7 @@ class _AnaEkranState extends State<AnaEkran> {
                         },
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: DropdownButton<String>(
                         value: secilenDurum,
@@ -273,212 +273,182 @@ class _AnaEkranState extends State<AnaEkran> {
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Fiyat Aralığı:'),
-                RangeSlider(
-                  values: fiyatAraligi,
-                  min: 0,
-                  max: 10000000,
-                  divisions: 100,
-                  labels: RangeLabels(
-                    '₺ ${formatPrice(fiyatAraligi.start)} TL',
-                    '₺ ${formatPrice(fiyatAraligi.end)} TL',
-                  ),
-                  onChanged: (RangeValues values) {
-                    setState(() {
-                      fiyatAraligi = values;
-                    });
-                  },
+                const SizedBox(height: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Fiyat Aralığı: ${formatPrice(fiyatAraligi.start)} TL - ${formatPrice(fiyatAraligi.end)} TL',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    RangeSlider(
+                      values: fiyatAraligi,
+                      min: 0,
+                      max: 100000000, // 100 milyon
+                      divisions: 100,
+                      onChanged: (RangeValues values) {
+                        setState(() {
+                          fiyatAraligi = values;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                const Text('Bina Yaşı:'),
-                RangeSlider(
-                  values: binaYasiAraligi,
-                  min: 0,
-                  max: 50,
-                  divisions: 50,
-                  labels: RangeLabels(
-                    '${binaYasiAraligi.start.toStringAsFixed(0)} yıl',
-                    '${binaYasiAraligi.end.toStringAsFixed(0)} yıl',
-                  ),
-                  onChanged: (RangeValues values) {
-                    setState(() {
-                      binaYasiAraligi = values;
-                    });
-                  },
+                const SizedBox(height: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Bina Yaşı: ${binaYasiAraligi.start.toInt()} - ${binaYasiAraligi.end.toInt()} yıl',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    RangeSlider(
+                      values: binaYasiAraligi,
+                      min: 0,
+                      max: 50,
+                      divisions: 50,
+                      onChanged: (RangeValues values) {
+                        setState(() {
+                          binaYasiAraligi = values;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.65,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: filtrelenmisEmlaklar.length,
-              itemBuilder: (context, index) {
-                final emlak = filtrelenmisEmlaklar[index];
-                return Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                    onTap: () async {
-                      final guncelEmlak = await Navigator.push<Emlak>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EmlakDetay(
-                            emlak: emlak,
-                            emlakSil: () {
+            child: filtrelenmisEmlaklar.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Filtrelere uygun emlak bulunamadı',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  )
+                : GridView.builder(
+                    padding: const EdgeInsets.all(8),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.75,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: filtrelenmisEmlaklar.length,
+                    itemBuilder: (context, index) {
+                      final emlak = filtrelenmisEmlaklar[index];
+                      return Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () async {
+                            final guncelEmlak = await Navigator.push<Emlak>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EmlakDetay(
+                                  emlak: emlak,
+                                  emlakSil: () => emlakSil(emlak.id),
+                                ),
+                              ),
+                            );
+                            if (guncelEmlak != null) {
                               setState(() {
-                                emlaklar.removeWhere((e) => e.id == emlak.id);
+                                final index = emlaklar
+                                    .indexWhere((e) => e.id == guncelEmlak.id);
+                                if (index != -1) {
+                                  emlaklar[index] = guncelEmlak;
+                                }
                               });
-                            },
+                            }
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Image.network(
+                                  emlak.resimUrl,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[300],
+                                      child: const Icon(
+                                        Icons.error_outline,
+                                        size: 40,
+                                        color: Colors.grey,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        emlak.baslik,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        emlak.konum,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '${formatPrice(emlak.fiyat)} TL',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            emlak.satilikMi
+                                                ? Icons.sell
+                                                : Icons.key,
+                                            size: 16,
+                                            color: Colors.grey[600],
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            emlak.satilikMi
+                                                ? 'Satılık'
+                                                : 'Kiralık',
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
-                      if (guncelEmlak != null) {
-                        setState(() {
-                          final index = emlaklar
-                              .indexWhere((e) => e.id == guncelEmlak.id);
-                          if (index != -1) {
-                            emlaklar[index] = guncelEmlak;
-                          }
-                        });
-                      }
                     },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Hero(
-                          tag: 'emlak_resim_${emlak.id}',
-                          child: AspectRatio(
-                            aspectRatio: 4 / 3,
-                            child: Image.network(
-                              emlak.resimUrl,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  emlak.baslik,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '₺ ${formatPrice(emlak.fiyat)} TL',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  emlak.konum,
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.grey,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    const Icon(Icons.home, size: 12),
-                                    const SizedBox(width: 2),
-                                    Expanded(
-                                      child: Text(
-                                        emlak.tip,
-                                        style: const TextStyle(fontSize: 10),
-                                      ),
-                                    ),
-                                    const Icon(Icons.calendar_today, size: 12),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      '${emlak.binaYasi} yaş',
-                                      style: const TextStyle(fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    const Icon(Icons.bed, size: 12),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      '${emlak.odaSayisi} oda',
-                                      style: const TextStyle(fontSize: 10),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    const Icon(Icons.bathroom, size: 12),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      '${emlak.banyoSayisi} banyo',
-                                      style: const TextStyle(fontSize: 10),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    const Icon(Icons.square_foot, size: 12),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      '${emlak.metreKare} m²',
-                                      style: const TextStyle(fontSize: 10),
-                                    ),
-                                    const Spacer(),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: emlak.satilikMi
-                                            ? Colors.blue
-                                            : Colors.orange,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Text(
-                                        emlak.satilikMi ? 'Satılık' : 'Kiralık',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),

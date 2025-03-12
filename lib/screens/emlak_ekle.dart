@@ -14,10 +14,7 @@ class _EmlakEkleState extends State<EmlakEkle> {
   final _baslikController = TextEditingController();
   final _aciklamaController = TextEditingController();
   final _fiyatController = TextEditingController();
-  final _resimUrlController = TextEditingController(
-    text:
-        'https://images.unsplash.com/photo-1568605114967-8130f3a36994', // Varsayılan resim URL'si
-  );
+  final _resimUrlController = TextEditingController();
   final _konumController = TextEditingController();
   final _odaSayisiController = TextEditingController();
   final _banyoSayisiController = TextEditingController();
@@ -40,6 +37,17 @@ class _EmlakEkleState extends State<EmlakEkle> {
     super.dispose();
   }
 
+  String? _validateNumber(String? value, String fieldName) {
+    if (value == null || value.isEmpty) {
+      return '$fieldName giriniz';
+    }
+    final numericValue = value.replaceAll('.', '');
+    if (double.tryParse(numericValue) == null) {
+      return 'Geçerli bir sayı giriniz';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +66,7 @@ class _EmlakEkleState extends State<EmlakEkle> {
                 decoration: const InputDecoration(
                   labelText: 'Başlık',
                   border: OutlineInputBorder(),
+                  helperText: 'Örnek: Deniz Manzaralı 3+1 Daire',
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -72,6 +81,7 @@ class _EmlakEkleState extends State<EmlakEkle> {
                 decoration: const InputDecoration(
                   labelText: 'Açıklama',
                   border: OutlineInputBorder(),
+                  helperText: 'Emlak hakkında detaylı bilgi',
                 ),
                 maxLines: 3,
                 validator: (value) {
@@ -116,9 +126,6 @@ class _EmlakEkleState extends State<EmlakEkle> {
                   if (double.tryParse(numericValue) == null) {
                     return 'Geçerli bir sayı girin';
                   }
-                  if (double.parse(numericValue) < 1000000) {
-                    return 'Fiyat en az 1.000.000 TL olmalıdır';
-                  }
                   return null;
                 },
               ),
@@ -161,17 +168,12 @@ class _EmlakEkleState extends State<EmlakEkle> {
                       decoration: const InputDecoration(
                         labelText: 'Oda Sayısı',
                         border: OutlineInputBorder(),
+                        helperText: 'Örnek: 3',
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Oda sayısı girin';
-                        }
-                        if (int.tryParse(value) == null) {
-                          return 'Geçerli bir sayı girin';
-                        }
-                        return null;
-                      },
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: (value) =>
+                          _validateNumber(value, 'Oda sayısı'),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -181,17 +183,12 @@ class _EmlakEkleState extends State<EmlakEkle> {
                       decoration: const InputDecoration(
                         labelText: 'Banyo Sayısı',
                         border: OutlineInputBorder(),
+                        helperText: 'Örnek: 1',
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Banyo sayısı girin';
-                        }
-                        if (int.tryParse(value) == null) {
-                          return 'Geçerli bir sayı girin';
-                        }
-                        return null;
-                      },
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: (value) =>
+                          _validateNumber(value, 'Banyo sayısı'),
                     ),
                   ),
                 ],
@@ -205,17 +202,12 @@ class _EmlakEkleState extends State<EmlakEkle> {
                       decoration: const InputDecoration(
                         labelText: 'Metre Kare',
                         border: OutlineInputBorder(),
+                        helperText: 'Örnek: 120',
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Metre kare girin';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Geçerli bir sayı girin';
-                        }
-                        return null;
-                      },
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: (value) =>
+                          _validateNumber(value, 'Metre kare'),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -225,17 +217,11 @@ class _EmlakEkleState extends State<EmlakEkle> {
                       decoration: const InputDecoration(
                         labelText: 'Bina Yaşı',
                         border: OutlineInputBorder(),
+                        helperText: 'Örnek: 5',
                       ),
                       keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Bina yaşı girin';
-                        }
-                        if (int.tryParse(value) == null) {
-                          return 'Geçerli bir sayı girin';
-                        }
-                        return null;
-                      },
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: (value) => _validateNumber(value, 'Bina yaşı'),
                     ),
                   ),
                 ],
@@ -262,47 +248,54 @@ class _EmlakEkleState extends State<EmlakEkle> {
                 },
               ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  const Text('Satılık mı?'),
-                  const SizedBox(width: 8),
-                  Switch(
-                    value: _satilikMi,
-                    onChanged: (value) {
-                      setState(() {
-                        _satilikMi = value;
-                      });
-                    },
-                  ),
-                ],
+              SwitchListTile(
+                title: const Text('Satılık mı?'),
+                value: _satilikMi,
+                onChanged: (value) {
+                  setState(() {
+                    _satilikMi = value;
+                  });
+                },
               ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     try {
+                      String fiyatStr =
+                          _fiyatController.text.replaceAll('.', '');
+                      double fiyat = double.parse(fiyatStr);
+
+                      int odaSayisi = int.parse(_odaSayisiController.text);
+                      int banyoSayisi = int.parse(_banyoSayisiController.text);
+                      double metreKare =
+                          double.parse(_metreKareController.text);
+                      int binaYasi = int.parse(_binaYasiController.text);
+
                       final yeniEmlak = Emlak(
-                        id: DateTime.now().toString(),
-                        baslik: _baslikController.text,
-                        aciklama: _aciklamaController.text,
-                        fiyat: double.parse(
-                            _fiyatController.text.replaceAll('.', '')),
-                        resimUrl: _resimUrlController.text,
-                        konum: _konumController.text,
-                        odaSayisi: int.parse(_odaSayisiController.text),
-                        banyoSayisi: int.parse(_banyoSayisiController.text),
-                        metreKare: double.parse(_metreKareController.text),
-                        binaYasi: int.parse(_binaYasiController.text),
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        baslik: _baslikController.text.trim(),
+                        aciklama: _aciklamaController.text.trim(),
+                        fiyat: fiyat,
+                        resimUrl: _resimUrlController.text.trim(),
+                        konum: _konumController.text.trim(),
+                        odaSayisi: odaSayisi,
+                        banyoSayisi: banyoSayisi,
+                        metreKare: metreKare,
+                        binaYasi: binaYasi,
                         tip: _secilenTip,
                         satilikMi: _satilikMi,
                       );
+
+                      print('Yeni emlak oluşturuldu: ${yeniEmlak.toJson()}');
                       Navigator.pop(context, yeniEmlak);
                     } catch (e) {
+                      print('Hata oluştu: $e');
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                              'Lütfen tüm alanları doğru formatta doldurun'),
+                        SnackBar(
+                          content: Text('Hata: ${e.toString()}'),
                           backgroundColor: Colors.red,
+                          duration: const Duration(seconds: 3),
                         ),
                       );
                     }
