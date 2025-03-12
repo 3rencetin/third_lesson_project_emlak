@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'screens/giris_ekrani.dart';
 import 'screens/ana_ekran.dart';
 
 void main() {
-  runApp(const EmlakApp());
+  runApp(const MyApp());
 }
 
-class EmlakApp extends StatelessWidget {
-  const EmlakApp({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +15,14 @@ class EmlakApp extends StatelessWidget {
       title: 'Emlak Uygulaması',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          primary: Colors.blue,
-          secondary: Colors.orange,
-        ),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const AnaEkran(),
+      initialRoute: '/giris',
+      routes: {
+        '/giris': (context) => const GirisEkrani(),
+        '/ana': (context) => const AnaEkran(),
+      },
     );
   }
 }

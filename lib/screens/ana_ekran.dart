@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/emlak.dart';
+import '../models/kullanici.dart';
 import 'emlak_detay.dart';
 import 'emlak_ekle.dart';
 
@@ -23,14 +24,24 @@ class _AnaEkranState extends State<AnaEkran> {
   String secilenDurum = 'Hepsi';
   RangeValues fiyatAraligi = const RangeValues(0, 100000000);
   RangeValues binaYasiAraligi = const RangeValues(0, 50);
+  late Kullanici aktifKullanici;
 
   @override
   void initState() {
     super.initState();
+    // Giriş yapan kullanıcıyı al
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      aktifKullanici = ModalRoute.of(context)!.settings.arguments as Kullanici;
+      _ornekVerileriYukle();
+    });
+  }
+
+  void _ornekVerileriYukle() {
     // Örnek emlak verileri
     emlaklar = [
       Emlak(
         id: '1',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Lüks Villa',
         aciklama: 'Beşiktaşta deniz manzaralı lüks villa',
         fiyat: 45000000, // 45 milyon
@@ -46,6 +57,7 @@ class _AnaEkranState extends State<AnaEkran> {
       ),
       Emlak(
         id: '2',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Modern Daire',
         aciklama: 'Kadıköyde merkezi konumda modern daire',
         fiyat: 12500000, // 12.5 milyon
@@ -61,6 +73,7 @@ class _AnaEkranState extends State<AnaEkran> {
       ),
       Emlak(
         id: '3',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Bahçeli Müstakil',
         aciklama: 'Üsküdarda geniş bahçeli müstakil ev',
         fiyat: 18500000, // 18.5 milyon
@@ -76,6 +89,7 @@ class _AnaEkranState extends State<AnaEkran> {
       ),
       Emlak(
         id: '4',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Boğaz Manzaralı Daire',
         aciklama: 'Sarıyerde boğaz manzaralı lüks daire',
         fiyat: 28500000, // 28.5 milyon
@@ -91,6 +105,7 @@ class _AnaEkranState extends State<AnaEkran> {
       ),
       Emlak(
         id: '5',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Kiralık Stüdyo',
         aciklama: 'Şişlide merkezi konumda kiralık stüdyo daire',
         fiyat: 25000, // 25 bin kira
@@ -106,6 +121,7 @@ class _AnaEkranState extends State<AnaEkran> {
       ),
       Emlak(
         id: '6',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Havuzlu Villa',
         aciklama: 'Beylikdüzünde özel havuzlu lüks villa',
         fiyat: 35000000, // 35 milyon
@@ -121,6 +137,7 @@ class _AnaEkranState extends State<AnaEkran> {
       ),
       Emlak(
         id: '7',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Kiralık Villa',
         aciklama: 'Ataşehirde bahçeli kiralık villa',
         fiyat: 85000, // 85 bin kira
@@ -136,6 +153,7 @@ class _AnaEkranState extends State<AnaEkran> {
       ),
       Emlak(
         id: '8',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Deniz Manzaralı',
         aciklama: 'Maltepe sahilde deniz manzaralı daire',
         fiyat: 15800000, // 15.8 milyon
@@ -151,6 +169,7 @@ class _AnaEkranState extends State<AnaEkran> {
       ),
       Emlak(
         id: '9',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Bahçeli Müstakil',
         aciklama: 'Çekmeköyde doğayla iç içe müstakil ev',
         fiyat: 22500000, // 22.5 milyon
@@ -166,6 +185,7 @@ class _AnaEkranState extends State<AnaEkran> {
       ),
       Emlak(
         id: '10',
+        kullaniciId: '1', // Admin'in ID'si
         baslik: 'Kiralık Daire',
         aciklama: 'Bakırköy merkeze yakın kiralık daire',
         fiyat: 35000, // 35 bin kira
@@ -180,6 +200,7 @@ class _AnaEkranState extends State<AnaEkran> {
         binaYasi: 25,
       ),
     ];
+    setState(() {});
   }
 
   List<Emlak> get filtrelenmisEmlaklar {
@@ -196,10 +217,24 @@ class _AnaEkranState extends State<AnaEkran> {
     }).toList();
   }
 
+  bool _kullaniciDuzenleyebilirMi(Emlak emlak) {
+    return aktifKullanici.isAdmin || emlak.kullaniciId == aktifKullanici.id;
+  }
+
   void emlakSil(String id) {
-    setState(() {
-      emlaklar.removeWhere((emlak) => emlak.id == id);
-    });
+    final emlak = emlaklar.firstWhere((e) => e.id == id);
+    if (_kullaniciDuzenleyebilirMi(emlak)) {
+      setState(() {
+        emlaklar.removeWhere((emlak) => emlak.id == id);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Bu ilanı silme yetkiniz yok'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -213,13 +248,22 @@ class _AnaEkranState extends State<AnaEkran> {
             onPressed: () async {
               final yeniEmlak = await Navigator.push<Emlak>(
                 context,
-                MaterialPageRoute(builder: (context) => const EmlakEkle()),
+                MaterialPageRoute(
+                  builder: (context) =>
+                      EmlakEkle(kullaniciId: aktifKullanici.id),
+                ),
               );
               if (yeniEmlak != null) {
                 setState(() {
                   emlaklar.add(yeniEmlak);
                 });
               }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/giris');
             },
           ),
         ],
@@ -342,24 +386,28 @@ class _AnaEkranState extends State<AnaEkran> {
                         clipBehavior: Clip.antiAlias,
                         child: InkWell(
                           onTap: () async {
-                            final guncelEmlak = await Navigator.push<Emlak>(
+                            final sadecaGoruntuleme =
+                                !_kullaniciDuzenleyebilirMi(emlak);
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EmlakDetay(
                                   emlak: emlak,
                                   emlakSil: () => emlakSil(emlak.id),
+                                  sadecaGoruntuleme: sadecaGoruntuleme,
                                 ),
                               ),
-                            );
-                            if (guncelEmlak != null) {
-                              setState(() {
-                                final index = emlaklar
-                                    .indexWhere((e) => e.id == guncelEmlak.id);
-                                if (index != -1) {
-                                  emlaklar[index] = guncelEmlak;
-                                }
-                              });
-                            }
+                            ).then((guncelEmlak) {
+                              if (guncelEmlak != null) {
+                                setState(() {
+                                  final index = emlaklar.indexWhere(
+                                      (e) => e.id == guncelEmlak.id);
+                                  if (index != -1) {
+                                    emlaklar[index] = guncelEmlak;
+                                  }
+                                });
+                              }
+                            });
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

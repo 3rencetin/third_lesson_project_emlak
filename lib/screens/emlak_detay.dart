@@ -12,11 +12,13 @@ String formatPrice(double price) {
 class EmlakDetay extends StatefulWidget {
   final Emlak emlak;
   final VoidCallback emlakSil;
+  final bool sadecaGoruntuleme;
 
   const EmlakDetay({
     Key? key,
     required this.emlak,
     required this.emlakSil,
+    required this.sadecaGoruntuleme,
   }) : super(key: key);
 
   @override
@@ -76,71 +78,75 @@ class _EmlakDetayState extends State<EmlakDetay> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.emlak.baslik),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Emlak Silinecek'),
-                  content: const Text(
-                      'Bu emlak ilanını silmek istediğinize emin misiniz?'),
-                  actions: [
-                    TextButton(
-                      child: const Text('İptal'),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    TextButton(
-                      child: const Text('Sil'),
-                      onPressed: () {
-                        widget.emlakSil();
-                        Navigator.pop(context); // Dialog'u kapat
-                        Navigator.pop(context); // Detay sayfasını kapat
-                      },
-                    ),
-                  ],
+        actions: widget.sadecaGoruntuleme
+            ? null
+            : [
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Emlak Silinecek'),
+                        content: const Text(
+                            'Bu emlak ilanını silmek istediğinize emin misiniz?'),
+                        actions: [
+                          TextButton(
+                            child: const Text('İptal'),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          TextButton(
+                            child: const Text('Sil'),
+                            onPressed: () {
+                              widget.emlakSil();
+                              Navigator.pop(context); // Dialog'u kapat
+                              Navigator.pop(context); // Detay sayfasını kapat
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {
-              try {
-                final fiyatStr = _fiyatController.text.replaceAll('.', '');
-                final guncelEmlak = Emlak(
-                  id: widget.emlak.id,
-                  baslik: _baslikController.text.trim(),
-                  aciklama: _aciklamaController.text.trim(),
-                  fiyat: double.parse(fiyatStr),
-                  resimUrl: _resimUrlController.text.trim(),
-                  konum: _konumController.text.trim(),
-                  odaSayisi: int.parse(_odaSayisiController.text),
-                  banyoSayisi: int.parse(_banyoSayisiController.text),
-                  metreKare: double.parse(_metreKareController.text),
-                  binaYasi: int.parse(_binaYasiController.text),
-                  tip: _secilenTip,
-                  satilikMi: _satilikMi,
-                );
-                Navigator.pop(context, guncelEmlak);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Değişiklikler kaydedildi'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Hata: ${e.toString()}'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+                IconButton(
+                  icon: const Icon(Icons.save),
+                  onPressed: () {
+                    try {
+                      final fiyatStr =
+                          _fiyatController.text.replaceAll('.', '');
+                      final guncelEmlak = Emlak(
+                        id: widget.emlak.id,
+                        kullaniciId: widget.emlak.kullaniciId,
+                        baslik: _baslikController.text.trim(),
+                        aciklama: _aciklamaController.text.trim(),
+                        fiyat: double.parse(fiyatStr),
+                        resimUrl: _resimUrlController.text.trim(),
+                        konum: _konumController.text.trim(),
+                        odaSayisi: int.parse(_odaSayisiController.text),
+                        banyoSayisi: int.parse(_banyoSayisiController.text),
+                        metreKare: double.parse(_metreKareController.text),
+                        binaYasi: int.parse(_binaYasiController.text),
+                        tip: _secilenTip,
+                        satilikMi: _satilikMi,
+                      );
+                      Navigator.pop(context, guncelEmlak);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Değişiklikler kaydedildi'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Hata: ${e.toString()}'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -253,172 +259,172 @@ class _EmlakDetayState extends State<EmlakDetay> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Düzenle',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                  if (!widget.sadecaGoruntuleme)
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Düzenle',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          TextField(
-                            controller: _baslikController,
-                            decoration: const InputDecoration(
-                              labelText: 'Başlık',
-                              border: OutlineInputBorder(),
+                            const SizedBox(height: 16),
+                            TextField(
+                              controller: _baslikController,
+                              decoration: const InputDecoration(
+                                labelText: 'Başlık',
+                                border: OutlineInputBorder(),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: _aciklamaController,
-                            maxLines: 3,
-                            decoration: const InputDecoration(
-                              labelText: 'Açıklama',
-                              border: OutlineInputBorder(),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: _aciklamaController,
+                              maxLines: 3,
+                              decoration: const InputDecoration(
+                                labelText: 'Açıklama',
+                                border: OutlineInputBorder(),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: _fiyatController,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Fiyat (TL)',
-                              border: OutlineInputBorder(),
-                              helperText: 'Örnek: 12.500.000',
-                              prefixText: '₺ ',
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: _fiyatController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                labelText: 'Fiyat (TL)',
+                                border: OutlineInputBorder(),
+                                helperText: 'Örnek: 12.500.000',
+                                prefixText: '₺ ',
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                TextInputFormatter.withFunction(
+                                    (oldValue, newValue) {
+                                  if (newValue.text.isEmpty) {
+                                    return newValue;
+                                  }
+                                  final number = int.parse(newValue.text);
+                                  final result = number
+                                      .toString()
+                                      .replaceAllMapped(
+                                        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                        (Match m) => '${m[1]}.',
+                                      );
+                                  return TextEditingValue(
+                                    text: result,
+                                    selection: TextSelection.collapsed(
+                                        offset: result.length),
+                                  );
+                                }),
+                              ],
                             ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              TextInputFormatter.withFunction(
-                                  (oldValue, newValue) {
-                                if (newValue.text.isEmpty) {
-                                  return newValue;
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: _resimUrlController,
+                              decoration: const InputDecoration(
+                                labelText: 'Resim URL',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: _konumController,
+                              decoration: const InputDecoration(
+                                labelText: 'Konum',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: _odaSayisiController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Oda Sayısı',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: TextField(
+                                    controller: _banyoSayisiController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Banyo Sayısı',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: _metreKareController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Metre Kare',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: TextField(
+                                    controller: _binaYasiController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Bina Yaşı',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            DropdownButtonFormField<String>(
+                              value: _secilenTip,
+                              decoration: const InputDecoration(
+                                labelText: 'Emlak Tipi',
+                                border: OutlineInputBorder(),
+                              ),
+                              items: ['Daire', 'Villa', 'Müstakil']
+                                  .map((tip) => DropdownMenuItem(
+                                        value: tip,
+                                        child: Text(tip),
+                                      ))
+                                  .toList(),
+                              onChanged: (yeniTip) {
+                                if (yeniTip != null) {
+                                  setState(() {
+                                    _secilenTip = yeniTip;
+                                  });
                                 }
-                                final number = int.parse(newValue.text);
-                                final result = number
-                                    .toString()
-                                    .replaceAllMapped(
-                                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                      (Match m) => '${m[1]}.',
-                                    );
-                                return TextEditingValue(
-                                  text: result,
-                                  selection: TextSelection.collapsed(
-                                      offset: result.length),
-                                );
-                              }),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: _resimUrlController,
-                            decoration: const InputDecoration(
-                              labelText: 'Resim URL',
-                              border: OutlineInputBorder(),
+                              },
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: _konumController,
-                            decoration: const InputDecoration(
-                              labelText: 'Konum',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: _odaSayisiController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Oda Sayısı',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: TextField(
-                                  controller: _banyoSayisiController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Banyo Sayısı',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: _metreKareController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Metre Kare',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: TextField(
-                                  controller: _binaYasiController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Bina Yaşı',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          DropdownButtonFormField<String>(
-                            value: _secilenTip,
-                            decoration: const InputDecoration(
-                              labelText: 'Emlak Tipi',
-                              border: OutlineInputBorder(),
-                            ),
-                            items: ['Daire', 'Villa', 'Müstakil']
-                                .map((tip) => DropdownMenuItem(
-                                      value: tip,
-                                      child: Text(tip),
-                                    ))
-                                .toList(),
-                            onChanged: (yeniTip) {
-                              if (yeniTip != null) {
+                            const SizedBox(height: 16),
+                            SwitchListTile(
+                              title: const Text('Satılık mı?'),
+                              value: _satilikMi,
+                              onChanged: (yeniDeger) {
                                 setState(() {
-                                  _secilenTip = yeniTip;
+                                  _satilikMi = yeniDeger;
                                 });
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          SwitchListTile(
-                            title: const Text('Satılık mı?'),
-                            value: _satilikMi,
-                            onChanged: (yeniDeger) {
-                              setState(() {
-                                _satilikMi = yeniDeger;
-                              });
-                            },
-                          ),
-                        ],
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),

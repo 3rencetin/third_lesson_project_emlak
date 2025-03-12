@@ -1,5 +1,6 @@
 class Emlak {
   final String id;
+  final String kullaniciId;
   final String baslik;
   final String aciklama;
   final double fiyat;
@@ -14,6 +15,7 @@ class Emlak {
 
   Emlak({
     required this.id,
+    required this.kullaniciId,
     required this.baslik,
     required this.aciklama,
     required this.fiyat,
@@ -31,6 +33,7 @@ class Emlak {
   factory Emlak.fromJson(Map<String, dynamic> json) {
     return Emlak(
       id: json['id'] as String,
+      kullaniciId: json['kullaniciId'] as String,
       baslik: json['baslik'] as String,
       aciklama: json['aciklama'] as String,
       fiyat: json['fiyat'] as double,
@@ -49,6 +52,7 @@ class Emlak {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'kullaniciId': kullaniciId,
       'baslik': baslik,
       'aciklama': aciklama,
       'fiyat': fiyat,
@@ -61,5 +65,41 @@ class Emlak {
       'tip': tip,
       'satilikMi': satilikMi,
     };
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'kullaniciId': kullaniciId,
+      'baslik': baslik,
+      'aciklama': aciklama,
+      'fiyat': fiyat,
+      'resimUrl': resimUrl,
+      'konum': konum,
+      'odaSayisi': odaSayisi,
+      'banyoSayisi': banyoSayisi,
+      'metreKare': metreKare,
+      'binaYasi': binaYasi,
+      'tip': tip,
+      'satilikMi': satilikMi,
+    };
+  }
+
+  factory Emlak.fromMap(Map<String, dynamic> map) {
+    return Emlak(
+      id: map['id'],
+      kullaniciId: map['kullaniciId'],
+      baslik: map['baslik'],
+      aciklama: map['aciklama'],
+      fiyat: map['fiyat'].toDouble(),
+      resimUrl: map['resimUrl'],
+      konum: map['konum'],
+      odaSayisi: map['odaSayisi'],
+      banyoSayisi: map['banyoSayisi'],
+      metreKare: map['metreKare'].toDouble(),
+      binaYasi: map['binaYasi'],
+      tip: map['tip'],
+      satilikMi: map['satilikMi'],
+    );
   }
 }

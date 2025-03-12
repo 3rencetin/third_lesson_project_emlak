@@ -3,7 +3,12 @@ import 'package:flutter/services.dart';
 import '../models/emlak.dart';
 
 class EmlakEkle extends StatefulWidget {
-  const EmlakEkle({Key? key}) : super(key: key);
+  final String kullaniciId;
+
+  const EmlakEkle({
+    Key? key,
+    required this.kullaniciId,
+  }) : super(key: key);
 
   @override
   _EmlakEkleState createState() => _EmlakEkleState();
@@ -261,44 +266,7 @@ class _EmlakEkleState extends State<EmlakEkle> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    try {
-                      String fiyatStr =
-                          _fiyatController.text.replaceAll('.', '');
-                      double fiyat = double.parse(fiyatStr);
-
-                      int odaSayisi = int.parse(_odaSayisiController.text);
-                      int banyoSayisi = int.parse(_banyoSayisiController.text);
-                      double metreKare =
-                          double.parse(_metreKareController.text);
-                      int binaYasi = int.parse(_binaYasiController.text);
-
-                      final yeniEmlak = Emlak(
-                        id: DateTime.now().millisecondsSinceEpoch.toString(),
-                        baslik: _baslikController.text.trim(),
-                        aciklama: _aciklamaController.text.trim(),
-                        fiyat: fiyat,
-                        resimUrl: _resimUrlController.text.trim(),
-                        konum: _konumController.text.trim(),
-                        odaSayisi: odaSayisi,
-                        banyoSayisi: banyoSayisi,
-                        metreKare: metreKare,
-                        binaYasi: binaYasi,
-                        tip: _secilenTip,
-                        satilikMi: _satilikMi,
-                      );
-
-                      print('Yeni emlak oluşturuldu: ${yeniEmlak.toJson()}');
-                      Navigator.pop(context, yeniEmlak);
-                    } catch (e) {
-                      print('Hata oluştu: $e');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Hata: ${e.toString()}'),
-                          backgroundColor: Colors.red,
-                          duration: const Duration(seconds: 3),
-                        ),
-                      );
-                    }
+                    _emlakEkle();
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -314,5 +282,36 @@ class _EmlakEkleState extends State<EmlakEkle> {
         ),
       ),
     );
+  }
+
+  void _emlakEkle() {
+    try {
+      final fiyatStr = _fiyatController.text.replaceAll('.', '');
+      final yeniEmlak = Emlak(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        kullaniciId: widget.kullaniciId,
+        baslik: _baslikController.text.trim(),
+        aciklama: _aciklamaController.text.trim(),
+        fiyat: double.parse(fiyatStr),
+        resimUrl: _resimUrlController.text.trim(),
+        konum: _konumController.text.trim(),
+        odaSayisi: int.parse(_odaSayisiController.text),
+        banyoSayisi: int.parse(_banyoSayisiController.text),
+        metreKare: double.parse(_metreKareController.text),
+        binaYasi: int.parse(_binaYasiController.text),
+        tip: _secilenTip,
+        satilikMi: _satilikMi,
+      );
+
+      Navigator.pop(context, yeniEmlak);
+      print('Yeni emlak oluşturuldu: ${yeniEmlak.toMap()}');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Hata: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
